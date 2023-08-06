@@ -1,0 +1,4 @@
+# local data
+app/configuration/*
+!app/configuration/default.py
+models/*.bin
