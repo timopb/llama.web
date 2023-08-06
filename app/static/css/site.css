@@ -47,6 +47,10 @@ hr {
     position: relative;
 }
 
+.tokenLimitExceeded {
+    color: #b41818 !important;
+    font-weight:bold;
+}
 
 @media screen and (min-width: 460px) {
     #tempLabel {

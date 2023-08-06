@@ -145,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         label.innerText=slider.value;
     });
 
+    const button = document.getElementById('send');
     const tokenCount = document.getElementById("tokenCount");
     const tokenCountValue = document.getElementById("tokenCountValue");
     const messageText = document.getElementById("messageText");
@@ -156,7 +157,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         } else {
             tokenCount.classList.add("d-none");
         }
-
+        if (encoded.length > {{ conf.CONTEXT_TOKENS }}) {
+            button.disabled = true;
+            tokenCount.classList.add("tokenLimitExceeded");
+        } else {
+            button.disabled = false;
+            tokenCount.classList.remove("tokenLimitExceeded");
+        }
     });
 
     connect();
