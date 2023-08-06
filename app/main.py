@@ -67,7 +67,7 @@ def cleanup_message(message):
 @app.websocket("/inference")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    welcome_resp = ChatResponse(sender="bot", message="LLaMa Ready. Model: %s" % conf.MODEL, type="info")
+    welcome_resp = ChatResponse(sender="bot", message="Welcome to the LLaMa inference web client!<br>Model used: %s" % conf.MODEL, type="info")
     await websocket.send_json(welcome_resp.dict())
 
     while True:
@@ -82,8 +82,8 @@ async def websocket_endpoint(websocket: WebSocket):
             start_type="start"
             logger.info("Temperature: %s " % payload["temperature"])
             logger.info("Prompt: %s " % prompt)
-            # info_resp = ChatResponse(sender="bot", message="Analyzing prompt...", type="info")
-            # await websocket.send_json(info_resp.dict())
+            info_resp = ChatResponse(sender="bot", message="Analyzing prompt...", type="info")
+            await websocket.send_json(info_resp.dict())
 
             for i in llm(prompt, 
                          echo=False, 

@@ -50,6 +50,18 @@ function copy() {
     alert("Copied response to clipboard.")
 }
 
+function updateResponseTokens() {
+    responseTokenCountValue = document.getElementById("responseTokenCountValue");
+    encoded = llamaTokenizer.encode(response)
+    responseTokenCountValue.innerText=encoded.length;
+    responseTokenCount.classList.remove("d-none");
+}
+
+function hideResponseTokens() {
+    responseTokenCount = document.getElementById("responseTokenCount");
+    responseTokenCount.classList.add("d-none");
+}
+
 function connect() {
     ws = new WebSocket("{{ wsurl }}/inference");
     ws.onmessage = function (event) {
@@ -85,6 +97,7 @@ function handleResBotResponse(data, messages) {
             p.innerHTML = converter.makeHtml(response);
             div.appendChild(p);
             messages.appendChild(div);
+            updateResponseTokens();
             break;
 
         case "stream":
@@ -92,12 +105,14 @@ function handleResBotResponse(data, messages) {
             var p = messages.lastChild.lastChild;
             response += data.message;
             p.innerHTML = converter.makeHtml(response);
+            updateResponseTokens();
             break;
 
         case "end":
             var p = messages.lastChild.lastChild;
             p.innerHTML = converter.makeHtml(response);
             setButton("{{ res.BUTTON_SEND }}", false);
+            updateResponseTokens();
             appendCopy();
             break;
 
@@ -109,6 +124,7 @@ function handleResBotResponse(data, messages) {
             p.innerHTML = converter.makeHtml(data.message);
             div.appendChild(p);
             messages.appendChild(div);
+            hideResponseTokens();
             break;
 
         case "error":
@@ -129,11 +145,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
         label.innerText=slider.value;
     });
 
+    const tokenCount = document.getElementById("tokenCount");
     const tokenCountValue = document.getElementById("tokenCountValue");
     const messageText = document.getElementById("messageText");
     messageText.addEventListener("input", () => {
         encoded = llamaTokenizer.encode(messageText.value)
-        tokenCountValue.innerText=encoded.length;
+        if (encoded.length > 0) {
+            tokenCount.classList.remove("d-none");
+            tokenCountValue.innerText=encoded.length
+        } else {
+            tokenCount.classList.add("d-none");
+        }
+
     });
 
     connect();
