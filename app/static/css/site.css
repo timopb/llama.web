@@ -98,6 +98,7 @@ hr {
     padding-top: 0px;
     padding-left: 0px;
     padding-right: 0px;
+    min-height: 500px;  
 }
 
 .container-fluid {
@@ -105,8 +106,7 @@ hr {
     padding-right: 0;
 }
 
-@media screen and (min-width: 576px) {
-
+@media screen and (min-width: 576px) {    
     .server-message {
         margin-left: 10px !important;
     }
@@ -164,22 +164,23 @@ hr {
 @media screen and (min-width: 920px) {
     .card-body {
         border-radius: 7px;
-    }
-    body {
-        padding-top: 15px;
-        padding-bottom:15px;
-    }
-
-}
-
-@media screen and (min-width: 940px) {
-    .card-body{
-        padding-top:2px;
+        min-height: 500px;
+        padding-top: 2px;
     }
     #messages {
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
     }
+    body {
+        padding-top: 15px;
+        padding-bottom:15px;
+
+    }
+
+}
+
+@media screen and (min-width: 940px) {
+
     body {
         padding-top: 60px;
         padding-bottom:60px;

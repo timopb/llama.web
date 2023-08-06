@@ -11,4 +11,4 @@ COPY ./app /llama/app
 
 WORKDIR /llama/app
 
-CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8124"]
+CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8123"]
