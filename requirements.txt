@@ -1,0 +1,6 @@
+fastapi
+websockets
+uvicorn
+jinja2
+bs4
+llama-cpp-python
