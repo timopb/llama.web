@@ -1,9 +1,8 @@
 """Schemas for the chat app."""
 from pydantic import BaseModel, validator
 
-
-class ChatResponse(BaseModel):
-    """Chat response schema."""
+class WSMessage(BaseModel):
+    """Websocket Message schema."""
 
     sender: str
     message: str
@@ -17,6 +16,6 @@ class ChatResponse(BaseModel):
 
     @validator("type")
     def validate_message_type(cls, v):
-        if v not in ["question", "start", "restart", "stream", "end", "error", "info"]:
+        if v not in ["question", "start", "restart", "stream", "end", "error", "info", "system"]:
             raise ValueError("type must be start, stream or end")
         return v

@@ -79,7 +79,6 @@ hr {
 }
 
 #messages p {
-    font-size: 1.2em !important;
     font-family: 'Inconsolata', monospace;
 }
 
@@ -201,6 +200,7 @@ hr {
 }
 
 .server-message {
+    font-size: 1.3em !important;
     float:left;
     width: -webkit-fill-available;
     border-radius: 6px;

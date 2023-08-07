@@ -3,6 +3,13 @@ let ws;
 let response = "";
 let conversationStarted = false;
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+let model = urlParams.get('model')
+if (model == null) {
+    model = '';
+}
+
 function setButton(value, disabled) {
     var button = document.getElementById('send');
     button.innerHTML = value;
@@ -26,7 +33,7 @@ function sendMessage(event) {
     }
     payload = {
         query: message,
-        temperature: parseFloat(temp) 
+        temperature: parseFloat(temp)
     }
     console.log(payload)
     ws.send(JSON.stringify(payload));
@@ -63,7 +70,7 @@ function hideResponseTokens() {
 }
 
 function connect() {
-    ws = new WebSocket("{{ wsurl }}/inference");
+    ws = new WebSocket("{{ wsurl }}/inference?model=" + model);
     ws.onmessage = function (event) {
         var messages = document.getElementById('messages');
         var data = JSON.parse(event.data);
@@ -121,24 +128,41 @@ function handleResBotResponse(data, messages) {
             var div = document.createElement('div');
             div.className = 'server-message';
             var p = document.createElement('p');
-            p.innerHTML = converter.makeHtml(data.message);
+            // p.innerHTML = converter.makeHtml(data.message);
+            p.innerHTML = data.message;
             div.appendChild(p);
             messages.appendChild(div);
             hideResponseTokens();
             break;
 
-        case "error":
-            setButton("{{ res.BUTTON_SEND }}", false);
+        case "system":
+            messages.innerHTML = '';
             var div = document.createElement('div');
             div.className = 'server-message';
             var p = document.createElement('p');
-            p.innerHTML += data.message;
+            p.innerHTML = data.message;
+            div.appendChild(p);
             messages.appendChild(div);
+            hideResponseTokens();
+            setButton("{{ res.BUTTON_SEND }}", false);
             break;
-    }    
+
+        case "error":
+            messages.innerHTML = '';
+            var div = document.createElement('div');
+            div.className = 'server-message';
+            var p = document.createElement('p');
+            // p.innerHTML = converter.makeHtml(data.message);
+            p.innerHTML = data.message;
+            div.appendChild(p);
+            messages.appendChild(div);
+            hideResponseTokens();
+            setButton("{{ res.BUTTON_SEND }}", false);
+            break;
+    }
 }
 
-document.addEventListener("DOMContentLoaded", function(event) { 
+document.addEventListener("DOMContentLoaded", function(event) {
     const slider = document.getElementById("tempSlider");
     const label = document.getElementById("tempValue");
     slider.addEventListener("input", () => {
