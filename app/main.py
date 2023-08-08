@@ -1,4 +1,5 @@
 """Main entrypoint for the app."""
+import psutil
 import json
 import logging
 import os
@@ -11,6 +12,7 @@ from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 from llama_cpp import Llama
 from schemas import WSMessage
+from sysinfo import get_html_system_state
 
 # Port to bind to
 DEFAULT_PORT=8123
@@ -82,6 +84,9 @@ async def parseCommands(websocket, query: str):
             await send(websocket, "Model loaded: %s" % model_name, "system")
         else: 
             await send(websocket, "Current model: %s" % model_name, "system")
+        return True
+    if (query.startswith("!system")):
+        await send(websocket, get_html_system_state(), "system")
         return True
     return False
 
