@@ -1,6 +1,6 @@
 MODEL = "(put your model name here)"
-# MODEL = "WizardML/WizardLM-7B-uncensored.ggml.q4_0.bin"
-# MODEL = "other/anon8231489123/ggml-gpt4-x-alpaca-13b_q4_0.bin"
+# MODEL = "WizardLM/WizardLM-7B-Uncensored.ggmlv3.q4_K_M.bin"
+# MODEL = "WizardLM/WizardLM-13B-Uncensored.ggmlv3.q4_K_M.bin"
 
 TEMPERATURE = 0.3
 TOP_P=0.6

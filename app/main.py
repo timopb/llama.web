@@ -40,7 +40,7 @@ async def startup_event():
     global llm
     global model_name
     model_name = conf.MODEL
-    llm = Llama(model_path= models_folder + "/" + model_name, n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
+    llm = Llama(model_path=os.path.join(models_folder, model_name), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
     logging.info("Server started")
 
 @app.get('/favicon.ico', include_in_schema=False)
@@ -74,7 +74,7 @@ async def parseCommands(websocket, query: str):
             await send(websocket, "Loading: %s..." % model_name, "info")
             try:
                 logger.info("Switching model to: %s" % model_name)
-                llm = Llama(model_path= models_folder + "/" + model_name, n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
+                llm = Llama(model_path=os.path.join(models_folder, model_name), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
             except:
                 logger.error ("failed to load model: %s " % model)
                 await send(websocket, "Failed to load model: %s" % model, "error")

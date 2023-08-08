@@ -3,13 +3,6 @@ let ws;
 let response = "";
 let conversationStarted = false;
 
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-let model = urlParams.get('model')
-if (model == null) {
-    model = '';
-}
-
 function setButton(value, disabled) {
     var button = document.getElementById('send');
     button.innerHTML = value;
@@ -70,7 +63,7 @@ function hideResponseTokens() {
 }
 
 function connect() {
-    ws = new WebSocket("{{ wsurl }}/inference?model=" + model);
+    ws = new WebSocket("{{ wsurl }}/inference");
     ws.onmessage = function (event) {
         var messages = document.getElementById('messages');
         var data = JSON.parse(event.data);
