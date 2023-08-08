@@ -68,17 +68,17 @@ async def parseCommands(websocket, query: str):
     global llm
     global model_name
     if (query.startswith("!model")):
-        model_args=query.split(" ")
+        model_args=query.strip().split(" ")
         if len(model_args) == 2:
-            model_name = model_args[1]
             await send(websocket, "Loading: %s..." % model_name, "info")
             try:
                 logger.info("Switching model to: %s" % model_name)
-                llm = Llama(model_path=os.path.join(models_folder, model_name), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
+                llm = Llama(model_path=os.path.join(models_folder, model_args[1]), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
+                model_name = model_args[1]
             except:
-                logger.error ("failed to load model: %s " % model)
-                await send(websocket, "Failed to load model: %s" % model, "error")
-                return
+                logger.error ("failed to load model: %s " % model_name)
+                await send(websocket, "Failed to load model: %s" % model_name, "error")
+                return True
             await send(websocket, "Model loaded: %s" % model_name, "system")
         else: 
             await send(websocket, "Current model: %s" % model_name, "system")
