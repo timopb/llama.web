@@ -41,7 +41,9 @@ async def send(ws, msg: str, type: str):
 async def startup_event():
     global llm
     global model_name
+    global stop_words
     model_name = conf.MODEL
+    stop_words = conf.STOP_WORDS
     llm = Llama(model_path=os.path.join(models_folder, model_name), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
     logging.info("Server started")
 
@@ -60,7 +62,7 @@ async def get(request: Request):
 @app.get("/inference.js")
 async def get(request: Request):
     return templates.TemplateResponse("inference.js", {
-        "request": request, 
+        "request": request,
         "wsurl": os.getenv("WSURL") if os.getenv("WSURL") != None else "ws://localhost:%s" % DEFAULT_PORT, 
         "res": res,
         "conf": conf
@@ -69,59 +71,73 @@ async def get(request: Request):
 async def parseCommands(websocket, query: str):
     global llm
     global model_name
-    if (query.startswith("!model")):
+    global stop_words
+
+    if query.startswith("!model"):
         model_args=query.strip().split(" ")
         if len(model_args) == 2:
-            await send(websocket, "Loading: %s..." % model_name, "info")
+            await send(websocket, "Loading: %s..." % model_args[1], "info")
             try:
-                logger.info("Switching model to: %s" % model_name)
+                logger.info("Switching model to: %s" % model_args[1])
                 llm = Llama(model_path=os.path.join(models_folder, model_args[1]), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
                 model_name = model_args[1]
             except:
-                logger.error ("failed to load model: %s " % model_name)
-                await send(websocket, "Failed to load model: %s" % model_name, "error")
+                logger.error ("failed to load model: %s " % model_args[1])
+                await send(websocket, "Failed to load model: %s" % model_args[1], "error")
                 return True
             await send(websocket, "Model loaded: %s" % model_name, "system")
-        else: 
+        else:
             await send(websocket, "Current model: %s" % model_name, "system")
         return True
-    if (query.startswith("!system")):
+
+    if query == "!system":
         await send(websocket, get_html_system_state(), "system")
         return True
+
+    if query.startswith("!stop"):
+        stop_args=query.strip().split(" ")
+        if len(stop_args) > 1:
+            stop_arg = "".join(stop_args[1:])
+            stop_words = stop_arg
+            await send(websocket, "Stop words set: %s" % stop_words, "system")
+        else:
+            await send(websocket, "Current stop words: %s" % stop_words, "system")
+        return True
+
     return False
 
 @app.websocket("/inference")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     await send(websocket, "Welcome to the LLaMa inference web client!", "info")
-    
+
     while True:
         try:
             response_complete = ""
-            start_type=""
+            start_type = ""
 
             received_text = await websocket.receive_text()
             payload = json.loads(received_text);
-            
-            # parse query for !model command. Skip chat if a command was parsed
-            if await parseCommands(websocket, payload["query"]): 
+
+            # parse query for commands. Skip chat if a command was executed
+            if await parseCommands(websocket, payload["query"]):
                 continue
-            
-            prompt = payload["query"] + "\n\n" + "### response:"
+
+            prompt = payload["query"]
             start_type="start"
             logger.info("Temperature: %s " % payload["temperature"])
             logger.info("Prompt: %s " % prompt)
 
             await send(websocket, "Analyzing prompt...", "info")
             for i in llm(prompt,
-                            echo=False,
-                            stream=True,
-                            temperature=payload["temperature"],
-                            top_k=conf.TOP_K,
-                            top_p=conf.TOP_P,
-                            repeat_penalty=conf.REPETATION_PENALTY,
-                            max_tokens=conf.MAX_RESPONSE_TOKENS,
-                            stop=["### response:"]):
+                         echo=False,
+                         stream=True,
+                         temperature=payload["temperature"],
+                         top_k=conf.TOP_K,
+                         top_p=conf.TOP_P,
+                         repeat_penalty=conf.REPETATION_PENALTY,
+                         max_tokens=conf.MAX_RESPONSE_TOKENS,
+                         stop=stop_words):
                 response_text = i.get("choices", [])[0].get("text", "")
                 if response_text != "":
                     answer_type = start_type if response_complete == "" else "stream"

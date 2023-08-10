@@ -1,6 +1,7 @@
 MODEL = "(put your model name here)"
-# MODEL = "WizardLM/WizardLM-7B-Uncensored.ggmlv3.q4_K_M.bin"
-# MODEL = "WizardLM/WizardLM-13B-Uncensored.ggmlv3.q4_K_M.bin"
+
+# Stopwords for instruct and vicuna style prompts
+STOP_WORDS = ["### response:", "assistant:"]
 
 TEMPERATURE = 0.3
 TOP_P=0.6

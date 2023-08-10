@@ -2,6 +2,7 @@ const converter = new showdown.Converter();
 let ws;
 let response = "";
 let conversationStarted = false;
+let dontScroll = false;
 
 function setButton(value, disabled) {
     var button = document.getElementById('send');
@@ -28,21 +29,20 @@ function sendMessage(event) {
         query: message,
         temperature: parseFloat(temp)
     }
-    console.log(payload)
     ws.send(JSON.stringify(payload));
     setButton("{{ res.BUTTON_PROCESSING }}", true)
 }
 
-function appendCopy() {
+function appendButtons() {
     var messages = document.getElementById('messages');
     var div = messages;
 
     var span = document.createElement('span');
-    span.innerHTML="<span class='btn btn-primary clip-button' onclick='copy()'><img src='/static/img/copy.svg'>&nbsp;Copy to clipboard</span>"
+    span.innerHTML="<span class='btn btn-primary clip-button' onclick='copyClipboard()'><img src='/static/img/copy.svg'>&nbsp;&nbsp;Copy to clipboard</span>"
     div.appendChild(span);
 }
 
-function copy() {
+function copyCliboard() {
     var messages = document.getElementById('messages');
     var div = messages.firstChild.firstChild;
     content = div.innerText; 
@@ -69,8 +69,10 @@ function connect() {
         var data = JSON.parse(event.data);
         handleResBotResponse(data ,messages)
 
-        // Scroll to the bottom of the chat
-        messages.scrollTop = messages.scrollHeight;
+        // Scroll to the bottom of the chat (don't auto scroll if user has scrolled manually)
+        if (!dontScroll){
+            messages.scrollTop = messages.scrollHeight;
+        }
     };
     ws.onopen = function() {
         setButton("{{ res.BUTTON_SEND }}", false);
@@ -88,6 +90,7 @@ function connect() {
 function handleResBotResponse(data, messages) {
     switch(data.type) {
         case "start":
+            dontScroll = false;
             messages.innerHTML = '';
             response = "";
             var div = document.createElement('div');
@@ -113,7 +116,7 @@ function handleResBotResponse(data, messages) {
             p.innerHTML = converter.makeHtml(response);
             setButton("{{ res.BUTTON_SEND }}", false);
             updateResponseTokens();
-            appendCopy();
+            appendButtons();
             break;
 
         case "info":
@@ -156,6 +159,11 @@ function handleResBotResponse(data, messages) {
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
+
+    let messages=document.getElementById("messages")
+    messages.addEventListener("touchmove", (event) => {
+        dontScroll = true;
+    });
     const slider = document.getElementById("tempSlider");
     const label = document.getElementById("tempValue");
     slider.addEventListener("input", () => {
