@@ -13,8 +13,8 @@ HELP = """<table style='margin-bottom:10px'>
 <tr><td>!system</td><td>System State (used/free CPU and RAM)</td></tr>
 </table>
 <table>
-<tr><th colspan=2>Prompt templates</th></tr>
-<tr><td>!vic</td><td>Helpful AI Vicuna 1.1 prompt template</td></tr>
-<tr><td>!###</td><td>Instruct/Response prompt template</td></tr>
-<tr><td>!story&nbsp;</td><td>Storyteller Vicuna 1.1 prompt template</td></tr>
+<tr><th colspan=2>Prompt templates (pres TAB to complete)</th></tr>
+<tr><td>#vic</td><td>Helpful AI Vicuna 1.1 prompt template</td></tr>
+<tr><td>#story&nbsp;</td><td>Storyteller Vicuna 1.1 prompt template</td></tr>
+<tr><td>###</td><td>Instruct/Response prompt template</td></tr>
 </table>"""

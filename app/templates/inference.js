@@ -31,17 +31,20 @@ function setPromptTemplate(template, cursorLocation){
     messageText.selectionEnd = cursorLocation;
 }
 
-function localCommandExecuted(){
+function localCommandExecuted(e){    
     const messageText = document.getElementById("messageText");
     switch(messageText.value.toLowerCase()){
-        case '!vic':
+        case '#vic':
             setPromptTemplate("{{ conf.VICUNA_PROMPT_TEMPLATE[0]|safe }}", {{ conf.VICUNA_PROMPT_TEMPLATE[1] }});
+            if (e) e.preventDefault();
             return true;
-        case '!###':
+        case '###':
             setPromptTemplate("{{ conf.INSTRUCT_PROMPT_TEMPLATE[0]|safe }}", {{ conf.INSTRUCT_PROMPT_TEMPLATE[1] }});
+            if (e) e.preventDefault();
             return true;
-        case '!story':
+        case '#story':
             setPromptTemplate("{{ conf.STORY_PROMPT_TEMPLATE[0]|safe }}", {{ conf.STORY_PROMPT_TEMPLATE[1] }});
+            if (e) e.preventDefault();
             return true;
         default:
             return false;
@@ -217,8 +220,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const tokenCountValue = document.getElementById("tokenCountValue");
     const messageText = document.getElementById("messageText");
     messageText.addEventListener("keydown", (e) => {
-        if (e.ctrlKey && e.keyCode == 13) {
+        if (e.ctrlKey && e.key === 'Enter') {
             if (!button.disabled) sendQuery();
+        }
+        if (e.key === "Tab") {
+            localCommandExecuted(e);
         }
     })
     messageText.focus();
