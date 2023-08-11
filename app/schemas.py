@@ -16,6 +16,6 @@ class WSMessage(BaseModel):
 
     @validator("type")
     def validate_message_type(cls, v):
-        if v not in ["question", "start", "restart", "stream", "end", "error", "info", "system"]:
+        if v not in ["question", "start", "restart", "stream", "end", "error", "info", "system","done"]:
             raise ValueError("type must be start, stream or end")
         return v

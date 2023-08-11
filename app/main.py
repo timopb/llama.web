@@ -72,8 +72,14 @@ async def parseCommands(websocket, query: str):
     global llm
     global model_name
     global stop_words
-
-    if query.startswith("!model"):
+    
+    if not query.startswith("!"): return False;
+    
+    if query.lower() == "!help":
+        await send(websocket, res.HELP, "system")
+        return True
+    
+    if query.lower().startswith("!model "): 
         model_args=query.strip().split(" ")
         if len(model_args) == 2:
             await send(websocket, "Loading: %s..." % model_args[1], "info")
@@ -87,24 +93,40 @@ async def parseCommands(websocket, query: str):
                 return True
             await send(websocket, "Model loaded: %s" % model_name, "system")
         else:
-            await send(websocket, "Current model: %s" % model_name, "system")
+            await send(websocket, "Usage: !model path/to/model.bin", "system")
         return True
 
-    if query == "!system":
+    if query.strip().lower() == "!model": 
+        await send(websocket, "Current model: %s" % model_name, "system")
+        return True
+
+    if query.strip().lower() == "!models":
+        await send(websocket, "Available Models:\n", "start")
+        for subdir, dirs, files in os.walk(models_folder, topdown=True):
+            for file in sorted(files):
+                model_file = os.path.join(subdir, file).replace(models_folder + "/", "")
+                await send(websocket, "* <a href=\"#\" onclick=\"pickModel('%s')\">%s</a>\n" % (model_file,model_file), "stream")
+        await send(websocket, "", "done")
+        return True
+    
+    if query.strip().lower() == "!system":
         await send(websocket, get_html_system_state(), "system")
         return True
 
-    if query.startswith("!stop"):
+    if query.lower().startswith("!stop "):
         stop_args=query.strip().split(" ")
-        if len(stop_args) > 1:
-            stop_arg = "".join(stop_args[1:])
-            stop_words = stop_arg
-            await send(websocket, "Stop words set: %s" % stop_words, "system")
-        else:
-            await send(websocket, "Current stop words: %s" % stop_words, "system")
+        stop_arg = "".join(stop_args[1:])
+        stop_words = stop_arg
+        await send(websocket, "Stop words set: %s" % stop_words, "system")
         return True
-
-    return False
+    
+    if query.strip().lower() == "!stop":
+        await send(websocket, "Current stop words: %s" % stop_words, "system")
+        return True
+    
+    query_args=query.strip().split(" ")
+    await send(websocket, "Unknown command: %s" % query_args[0], "system")
+    return True
 
 @app.websocket("/inference")
 async def websocket_endpoint(websocket: WebSocket):

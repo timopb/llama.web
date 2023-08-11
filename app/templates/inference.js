@@ -1,4 +1,5 @@
 const converter = new showdown.Converter();
+
 let ws;
 let response = "";
 let conversationStarted = false;
@@ -15,9 +16,40 @@ function setButton(value, disabled) {
     }
 }
 
-function sendMessage(event) {
-    event.preventDefault();
+function pickModel(model){
+    messageText.value = "!model " + model;
+    messageText.focus();
+    sendQuery();
+    messageText.value = "";
+    messageText.focus();
+    return false;
+}
 
+function setPromptTemplate(template, cursorLocation){
+    messageText.value = template;
+    messageText.focus();
+    messageText.selectionEnd = cursorLocation;
+}
+
+function localCommandExecuted(){
+    const messageText = document.getElementById("messageText");
+    switch(messageText.value.toLowerCase()){
+        case '!vic':
+            setPromptTemplate("{{ conf.VICUNA_PROMPT_TEMPLATE[0]|safe }}", {{ conf.VICUNA_PROMPT_TEMPLATE[1] }});
+            return true;
+        case '!###':
+            setPromptTemplate("{{ conf.INSTRUCT_PROMPT_TEMPLATE[0]|safe }}", {{ conf.INSTRUCT_PROMPT_TEMPLATE[1] }});
+            return true;
+        case '!story':
+            setPromptTemplate("{{ conf.STORY_PROMPT_TEMPLATE[0]|safe }}", {{ conf.STORY_PROMPT_TEMPLATE[1] }});
+            return true;
+        default:
+            return false;
+    }
+}
+
+function sendQuery() {
+    if (localCommandExecuted()) return;
     if (!ws) return;
     conversationStarted = true;
     var message = document.getElementById('messageText').value;
@@ -33,6 +65,11 @@ function sendMessage(event) {
     setButton("{{ res.BUTTON_PROCESSING }}", true)
 }
 
+function submitForm(event) {
+    event.preventDefault();
+    sendQuery();
+}
+
 function appendButtons() {
     var messages = document.getElementById('messages');
     var div = messages;
@@ -42,7 +79,7 @@ function appendButtons() {
     div.appendChild(span);
 }
 
-function copyCliboard() {
+function copyClipboard() {
     var messages = document.getElementById('messages');
     var div = messages.firstChild.firstChild;
     content = div.innerText; 
@@ -118,7 +155,12 @@ function handleResBotResponse(data, messages) {
             updateResponseTokens();
             appendButtons();
             break;
-
+            
+        case "done":
+            hideResponseTokens();
+            setButton("{{ res.BUTTON_SEND }}", false);
+            break;
+    
         case "info":
             messages.innerHTML = '';
             var div = document.createElement('div');
@@ -174,6 +216,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const tokenCount = document.getElementById("tokenCount");
     const tokenCountValue = document.getElementById("tokenCountValue");
     const messageText = document.getElementById("messageText");
+    messageText.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.keyCode == 13) {
+            if (!button.disabled) sendQuery();
+        }
+    })
+    messageText.focus();
+
     messageText.addEventListener("input", () => {
         encoded = llamaTokenizer.encode(messageText.value)
         if (encoded.length > 0) {
@@ -182,12 +231,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         } else {
             tokenCount.classList.add("d-none");
         }
-        if (encoded.length > {{ conf.CONTEXT_TOKENS }}) {
-            button.disabled = true;
-            tokenCount.classList.add("tokenLimitExceeded");
-        } else {
-            button.disabled = false;
-            tokenCount.classList.remove("tokenLimitExceeded");
+        if (!button.disabled) {
+            if (encoded.length > {{ conf.CONTEXT_TOKENS }}) {
+                button.disabled = true;
+                tokenCount.classList.add("tokenLimitExceeded");
+            } else {
+                button.disabled = false;
+                tokenCount.classList.remove("tokenLimitExceeded");
+            }
         }
     });
 

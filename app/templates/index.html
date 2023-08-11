@@ -22,7 +22,7 @@
                     </div>
                     <span id="responseTokenCount" class="response-token-count d-none"><span id="responseTokenCountLabel">Tokens:&nbsp;</span><span id="responseTokenCountValue">0</span> / {{conf.MAX_RESPONSE_TOKENS }}</span>
                 </div>
-                <form action="" class="form-inline" id="chat-form" onsubmit="sendMessage(event)">
+                <form action="" class="form-inline" id="chat-form" onsubmit="submitForm(event)">
                     <div class="controls-box">
                         <div class="input-box">
                             <textarea rows=8 class="form-control" placeholder="{{ res.PROMPT }}" aria-label="{{ res.PROMPT }}" id="messageText"></textarea>
