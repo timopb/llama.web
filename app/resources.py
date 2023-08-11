@@ -4,7 +4,7 @@ PROMPT = "(Enter your prompt here, type !help for a list of commands)"
 BUTTON_SEND = "Ask the LLaMa"
 BUTTON_WAIT = "Wait"
 HELP = """<table style='margin-bottom:10px'>
-<tr><th>Command</th><th>Meaning</th></tr>
+<tr><th colspan=2>Server commands</th></tr>
 <tr><td>!models</td><td>List available models</td></tr>
 <tr><td>!model</td><td>Show currently loaded model</td></tr>
 <tr><td>!model (filename)</td><td>Load a different model</td></tr>
