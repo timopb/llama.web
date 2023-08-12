@@ -131,7 +131,7 @@ async def parseCommands(websocket, query: str):
 @app.websocket("/inference")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    await send(websocket, "Welcome to the LLaMa inference web client!", "info")
+    await send(websocket, "Welcome to the LLaMa inference web console!", "info")
 
     while True:
         try:

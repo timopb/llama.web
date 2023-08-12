@@ -34,18 +34,12 @@ function setPromptTemplate(template, cursorLocation){
 function localCommandExecuted(e){    
     const messageText = document.getElementById("messageText");
     switch(messageText.value.toLowerCase()){
-        case '#vic':
-            setPromptTemplate("{{ conf.VICUNA_PROMPT_TEMPLATE[0]|safe }}", {{ conf.VICUNA_PROMPT_TEMPLATE[1] }});
+        {% for template in conf.PROMPT_TEMPLATES %}
+        case '#{{ template[0] }}':
+            setPromptTemplate("{{ template[1]|safe }}", {{ template[2] }});
             if (e) e.preventDefault();
             return true;
-        case '###':
-            setPromptTemplate("{{ conf.INSTRUCT_PROMPT_TEMPLATE[0]|safe }}", {{ conf.INSTRUCT_PROMPT_TEMPLATE[1] }});
-            if (e) e.preventDefault();
-            return true;
-        case '#story':
-            setPromptTemplate("{{ conf.STORY_PROMPT_TEMPLATE[0]|safe }}", {{ conf.STORY_PROMPT_TEMPLATE[1] }});
-            if (e) e.preventDefault();
-            return true;
+        {% endfor %}
         default:
             return false;
     }
@@ -78,16 +72,21 @@ function appendButtons() {
     var div = messages;
 
     var span = document.createElement('span');
-    span.innerHTML="<span class='btn btn-primary clip-button' onclick='copyClipboard()'><img src='/static/img/copy.svg'>&nbsp;&nbsp;Copy to clipboard</span>"
+    span.innerHTML="<span class='btn btn-primary clip-button' onclick='copyClipboard(this)'><img src='/static/img/copy.svg'>&nbsp;&nbsp;<span id='clip-button-label'>Copy to clipboard</span></span>"
     div.appendChild(span);
 }
 
-function copyClipboard() {
+function copyClipboard(e) {
     var messages = document.getElementById('messages');
     var div = messages.firstChild.firstChild;
     content = div.innerText; 
     navigator.clipboard.writeText(content);
-    alert("Copied response to clipboard.")
+    label = document.getElementById("clip-button-label")
+    label.innerHTML = "Copied!"
+    setTimeout(()=>{
+        label.innerText = "Copy to clipboard";
+    },
+    2000)
 }
 
 function updateResponseTokens() {
