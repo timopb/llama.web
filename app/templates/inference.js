@@ -208,6 +208,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     messages.addEventListener("touchmove", (event) => {
         dontScroll = true;
     });
+    messages.addEventListener("click", (event) => {
+        dontScroll = true;
+    });
     const slider = document.getElementById("tempSlider");
     const label = document.getElementById("tempValue");
     slider.addEventListener("input", () => {
