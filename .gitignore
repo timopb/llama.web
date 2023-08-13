@@ -1,4 +1,6 @@
 # local data
 app/configuration/*
 !app/configuration/default.py
+1env.sh
 models/*.bin
+
