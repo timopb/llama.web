@@ -17,13 +17,13 @@
     <div class="container-fluid h-100">
         <div class="chat-body h-100">
             <div class="card-body h-100">
-                <div class="top-box">
+                <div id="top-box">
                     <div id="messages" class="overflow-auto">
                     </div>
                     <span id="responseTokenCount" class="response-token-count d-none"><span id="responseTokenCountLabel">Tokens:&nbsp;</span><span id="responseTokenCountValue">0</span> / {{conf.MAX_RESPONSE_TOKENS }}</span>
                 </div>
                 <form action="" class="form-inline" id="chat-form" onsubmit="submitForm(event)">
-                    <div class="controls-box">
+                    <div id="controls-box">
                         <div class="input-box">
                             <textarea rows=8 class="form-control" placeholder="{{ res.PROMPT }}" aria-label="{{ res.PROMPT }}" id="messageText"></textarea>
                             <span id="tokenCount" class="token-count d-none"><span id="tokenCountLabel">Tokens:&nbsp;</span><span id="tokenCountValue">0</span> / {{ conf.CONTEXT_TOKENS }}</span>

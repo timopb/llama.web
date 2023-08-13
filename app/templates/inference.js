@@ -31,7 +31,7 @@ function setPromptTemplate(template, cursorLocation){
     messageText.selectionEnd = cursorLocation;
 }
 
-function localCommandExecuted(e){    
+function localCommandExecuted(e){
     const messageText = document.getElementById("messageText");
     switch(messageText.value.toLowerCase()){
         {% for template in conf.PROMPT_TEMPLATES %}
@@ -157,12 +157,12 @@ function handleResBotResponse(data, messages) {
             updateResponseTokens();
             appendButtons();
             break;
-            
+
         case "done":
             hideResponseTokens();
             setButton("{{ res.BUTTON_SEND }}", false);
             break;
-    
+
         case "info":
             messages.innerHTML = '';
             var div = document.createElement('div');
@@ -203,13 +203,16 @@ function handleResBotResponse(data, messages) {
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
+    let messages=document.getElementById("messages");
+    let topbox=document.getElementById("top-box");
 
-    let messages=document.getElementById("messages")
-    messages.addEventListener("touchmove", (event) => {
-        dontScroll = true;
-    });
-    messages.addEventListener("click", (event) => {
-        dontScroll = true;
+    ['touchmove','select','click'].forEach((evt) => {
+        messages.addEventListener(evt, (e) => {
+            dontScroll = true;
+        });
+        topbox.addEventListener(evt, (e) => {
+            dontScroll = true;
+        });
     });
     const slider = document.getElementById("tempSlider");
     const label = document.getElementById("tempValue");

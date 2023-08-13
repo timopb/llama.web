@@ -40,7 +40,7 @@ hr {
     position: relative;
 }
 
-.top-box {
+#top-box {
     background-color:#fff;
     min-height: 150px; 
     height: calc(100% - 335px);
@@ -83,16 +83,6 @@ hr {
     font-family: 'Inconsolata', monospace;
 }
 
-.speaker-icon {
-    width: 20px;
-    height: 20px;
-    float: right;
-    position: relative;
-    bottom: 20px;
-    cursor: pointer;
-    opacity: 0.6;
-}
-
 .card-body{
     background-color:#e0e0e0;
     padding-top: 0px;
@@ -127,7 +117,7 @@ hr {
         box-shadow: 0 0 20px 0px rgba(0,0,0,0.3);
     }
 
-    .controls-box {
+    #controls-box {
         padding-bottom: 10px !important;
         margin-right:15px;
     }
@@ -138,7 +128,7 @@ hr {
         margin: 0 auto !important;
     }
 
-    .top-box {
+    #top-box {
         height: calc(100% - 320px);
     }
     
@@ -188,7 +178,7 @@ hr {
 }
 
 
-.controls-box {
+#controls-box {
     padding:0px; 
     border-radius: 10px;
 }
