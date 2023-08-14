@@ -4,7 +4,7 @@ A simple inference web UI for llama.cpp / lama-cpp-python
 ![Screenshot](https://github.com/timopb/llama.web/assets/3785547/01a94b0c-5706-4c51-acdf-a3694a9e6bfb)
 
 # What it is
-This web frontend is intended to run quantized ggml language models locally. It's very simple and intended to run locally without authentication or authorization for administrative activities. Use at own risk.
+This web frontend is intended to run inferences against quantized ggml language models. It's very simple and intended to run locally without authentication or authorization for administrative activities. Use at own risk.
 
 # How it works
 1. Get a model from huggingface and convert it appropriately
