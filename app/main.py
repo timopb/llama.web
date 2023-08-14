@@ -72,14 +72,14 @@ async def parseCommands(websocket, query: str):
     global llm
     global model_name
     global stop_words
-    
+
     if not query.startswith("!"): return False;
-    
+
     if query.lower() == "!help":
         await send(websocket, res.HELP, "system")
         return True
-    
-    if query.lower().startswith("!model "): 
+
+    if query.lower().startswith("!model "):
         model_args=query.strip().split(" ")
         if len(model_args) == 2:
             await send(websocket, "Loading: %s..." % model_args[1], "info")
@@ -108,7 +108,7 @@ async def parseCommands(websocket, query: str):
                 await send(websocket, "* <a href=\"#\" onclick=\"pickModel('%s')\">%s</a>\n" % (model_file,model_file), "stream")
         await send(websocket, "", "done")
         return True
-    
+
     if query.strip().lower() == "!system":
         await send(websocket, get_html_system_state(), "system")
         return True
@@ -119,11 +119,11 @@ async def parseCommands(websocket, query: str):
         stop_words = stop_arg
         await send(websocket, "Stop words set: %s" % stop_words, "system")
         return True
-    
+
     if query.strip().lower() == "!stop":
         await send(websocket, "Current stop words: %s" % stop_words, "system")
         return True
-    
+
     query_args=query.strip().split(" ")
     await send(websocket, "Unknown command: %s" % query_args[0], "system")
     return True
