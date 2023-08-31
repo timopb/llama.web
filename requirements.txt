@@ -3,5 +3,5 @@ websockets
 uvicorn
 jinja2
 bs4
-llama-cpp-python==0.1.78
+llama-cpp-python
 psutil
