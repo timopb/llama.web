@@ -42,9 +42,11 @@ async def startup_event():
     global llm
     global model_name
     global stop_words
+    global gpu_layers
     model_name = conf.MODEL
     stop_words = conf.STOP_WORDS
-    llm = Llama(model_path=os.path.join(models_folder, model_name), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
+    gpu_layers = conf.GPU_LAYERS
+    llm = Llama(model_path=os.path.join(models_folder, model_name), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True, n_gpu_layers=gpu_layers)
     logging.info("Server started")
 
 @app.get('/favicon.ico', include_in_schema=False)
@@ -72,6 +74,7 @@ async def parseCommands(websocket, query: str):
     global llm
     global model_name
     global stop_words
+    global gpu_layers
 
     if not query.startswith("!"): return False;
 
@@ -85,7 +88,7 @@ async def parseCommands(websocket, query: str):
             await send(websocket, "Loading: %s..." % model_args[1], "info")
             try:
                 logger.info("Switching model to: %s" % model_args[1])
-                llm = Llama(model_path=os.path.join(models_folder, model_args[1]), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True)
+                llm = Llama(model_path=os.path.join(models_folder, model_args[1]), n_ctx=conf.CONTEXT_TOKENS, n_threads=max_threads, use_mlock=True, n_gpu_layers=gpu_layers)
                 model_name = model_args[1]
             except:
                 logger.error ("failed to load model: %s " % model_args[1])
@@ -116,13 +119,25 @@ async def parseCommands(websocket, query: str):
     if query.lower().startswith("!stop "):
         stop_args=query.strip().split(" ")
         stop_arg = "".join(stop_args[1:])
-        stop_words = stop_arg
+        stop_words = stop_arg.replace(" ", "").split(",")
         await send(websocket, "Stop words set: %s" % stop_words, "system")
         return True
 
     if query.strip().lower() == "!stop":
         await send(websocket, "Current stop words: %s" % stop_words, "system")
         return True
+
+    if query.strip().lower() == "!gpu":
+        await send(websocket, "Current GPU layer count: %s" % gpu_layers, "system")
+        return True
+
+    if query.lower().startswith("!gpu "):
+        gpu_args=query.strip().split(" ")
+        gpu_arg = "".join(gpu_args[1:])
+        gpu_layers = gpu_arg
+        await send(websocket, "GPU layers set to %s" % gpu_layers, "system")
+        return True
+
 
     query_args=query.strip().split(" ")
     await send(websocket, "Unknown command: %s" % query_args[0], "system")

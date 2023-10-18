@@ -206,14 +206,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let messages=document.getElementById("messages");
     let topbox=document.getElementById("top-box");
 
-    ['touchmove','select','click'].forEach((evt) => {
+    ['touchmove','mousedown','select','wheel'].forEach((evt) => {
         messages.addEventListener(evt, (e) => {
-            dontScroll = true;
-        });
-        topbox.addEventListener(evt, (e) => {
-            dontScroll = true;
+            if(Math.floor(messages.scrollTop) === Math.floor(messages.scrollHeight - messages.offsetHeight)) {
+                dontScroll = false;
+            }
+            else{
+                dontScroll = true;
+            }
         });
     });
+
+
     const slider = document.getElementById("tempSlider");
     const label = document.getElementById("tempValue");
     slider.addEventListener("input", () => {
