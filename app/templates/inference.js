@@ -231,9 +231,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     messageText.addEventListener("keydown", (e) => {
         if (e.ctrlKey && e.key === 'Enter') {
             if (!button.disabled) sendQuery();
+            e.preventDefault();
         }
         if (e.key === "Tab") {
             localCommandExecuted(e);
+            e.preventDefault();
         }
     })
     messageText.focus();
