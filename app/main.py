@@ -65,7 +65,7 @@ async def get(request: Request):
 async def get(request: Request):
     return templates.TemplateResponse("inference.js", {
         "request": request,
-        "wsurl": os.getenv("WSURL") if os.getenv("WSURL") != None else "ws://localhost:%s" % DEFAULT_PORT, 
+        "wsurl": os.getenv("WSURL", ""),
         "res": res,
         "conf": conf
     })

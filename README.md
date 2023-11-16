@@ -19,7 +19,7 @@ This web frontend is intended to run inferences against quantized ggml language 
 --------------|---------------------------------------------------------------
 CONFIGURATION | Specifies which configuration file from the configuration folder will be loaded (default.py if not set)
 MODELS_FOLDER | Path to your LLMs. By default it will use "models" in the root folder of the project
-WSURL         | external URL for websocket connection. Will be rendered into the HTML/Javascript. Default ws://localhost. Overwrite if running behind a reverse proxy 
+WSURL         | external URL for websocket connection. Will be rendered into the HTML/Javascript. If not set, website hostname will be used. Overwrite this if running behind a reverse proxy 
 
 # Builtin Chat Commands
 As I am to lazy to build a sophisticated UI some options can only be accessed by chat commands. Type in `!help` to get a list of available commands
