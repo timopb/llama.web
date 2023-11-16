@@ -102,7 +102,11 @@ function hideResponseTokens() {
 }
 
 function connect() {
-    ws = new WebSocket("{{ wsurl }}/inference");
+    let wsBaseUrl = "{{ wsurl }}";
+    if (wsBaseUrl === "") {
+        wsBaseUrl = "ws://" + window.location.host;
+    }
+    ws = new WebSocket(wsBaseUrl + "/inference");
     ws.onmessage = function (event) {
         var messages = document.getElementById('messages');
         var data = JSON.parse(event.data);
