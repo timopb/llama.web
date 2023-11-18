@@ -114,7 +114,7 @@ function connect() {
 
         // Scroll to the bottom of the chat (don't auto scroll if user has scrolled manually)
         if (!dontScroll){
-            messages.scrollTop = messages.scrollHeight;
+            messages.scrollTop = Math.floor(messages.scrollHeight - messages.offsetHeight)
         }
     };
     ws.onopen = function() {
