@@ -36,22 +36,25 @@ As I am to lazy to build a sophisticated UI some options can only be accessed by
 **Tip:** Server commands (and chat messages alike) can be sent by either pressing the "Ask the LLaMa" button or pressing ctrl + enter
 
 # Quick Prompt Templates
-The web comes with three pre-defined prompt templates which can be auto-completed via a specific shortcut text and either pressing tab or ctrl + enter
+The web comes with four pre-defined prompt templates which can be auto-completed via a specific shortcut text and either pressing tab or ctrl + enter
 
 Shortcut | Description
 ---------|-----------------------------------
-#vic     |	Helpful AI Vicuna 1.1 prompt template
+#vic     | Helpful AI Vicuna 1.1 prompt template
 #story 	 | Storyteller Vicuna 1.1 prompt template
-\#\#\#   |	Instruct/Response prompt template
+\#\#\#   | Instruct/Response prompt template
+#inst    | LLaMa2 Instruct Template
 
 You can define own templates in your configuration file:
 ```python
 PROMPT_TEMPLATES = [
     ["vic",   "You are a helpful AI assistant.\\n\\nUSER: \\n\\nASSISTANT:", 39],
     ["##",    "\\n\\n### RESPONSE:", 0],
-    ["story", "You are a storyteller. Your writing is vivid, exentive and very detailed. Extract the character traits from the user's input but don't name them in your story directly. Instead weave them into the story.\\n\\nUSER: Write a story about \\n\\nASSISTANT:",  231]
+    ["story", "You are a storyteller. Your writing is vivid, exentive and very detailed. Extract the character traits from the user's input but don't name them in your story directly. Instead weave them into the story.\\n\\nUSER: Write a story about \\n\\nASSISTANT:",  231],
+    ["inst", "[INST]\\n<<SYS>>You are a helpfull, respectful and honest assistant<</SYS>>\\n\\n[/INST]\\n", 74]
 ]
 ```
+
 Each Template consists of an arry with three items:
 1. The chat shortcut (without the leading \#)
 2. The Template. Note: Since this is python code that is rendered into javascript code, escaped characters need to have their escape prefix escaped too (ie \\n -> \\\\n)
