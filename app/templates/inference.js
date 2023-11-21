@@ -104,7 +104,8 @@ function hideResponseTokens() {
 function connect() {
     let wsBaseUrl = "{{ wsurl }}";
     if (wsBaseUrl === "") {
-        wsBaseUrl = "ws://" + window.location.host;
+        let wsProtocol = "https:" === document.location.protocol ? 'wss://' : 'ws://'
+        wsBaseUrl = wsProtocol + window.location.host;
     }
     ws = new WebSocket(wsBaseUrl + "/inference");
     ws.onmessage = function (event) {
