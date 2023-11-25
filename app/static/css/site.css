@@ -43,7 +43,7 @@ hr {
 #top-box {
     background-color:#fff;
     min-height: 150px; 
-    height: calc(100% - 335px);
+    height: calc(100% - 235px);
     position: relative;
 }
 
@@ -129,7 +129,7 @@ hr {
     }
 
     #top-box {
-        height: calc(100% - 320px);
+        height: calc(100% - 220px);
     }
     
     #messages {
@@ -172,8 +172,8 @@ hr {
 @media screen and (min-width: 940px) {
 
     body {
-        padding-top: 60px;
-        padding-bottom:60px;
+        padding-top: 40px;
+        padding-bottom:40px;
     }
 }
 

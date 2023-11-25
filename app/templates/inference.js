@@ -1,9 +1,9 @@
-const converter = new showdown.Converter();
-
 let ws;
 let response = "";
 let conversationStarted = false;
 let dontScroll = false;
+
+
 
 function setButton(value, disabled) {
     var button = document.getElementById('send');

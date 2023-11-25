@@ -8,8 +8,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/highlight.min.css">
     <link rel="stylesheet" href="static/css/site.css">
     <script src="static/js/showdown.min.js"></script>
+    <script src="static/js/highlight.min.js"></script>
+    <script src="static/js/converter.js"></script>
     <script type="module" src="static/js/llama-tokenizer.js"></script>
     <script src="inference.js"></script>
 </head>
@@ -25,7 +28,7 @@
                 <form action="" class="form-inline" id="chat-form" onsubmit="submitForm(event)">
                     <div id="controls-box">
                         <div class="input-box">
-                            <textarea rows=8 class="form-control" placeholder="{{ res.PROMPT }}" aria-label="{{ res.PROMPT }}" id="messageText"></textarea>
+                            <textarea rows=5 class="form-control" placeholder="{{ res.PROMPT }}" aria-label="{{ res.PROMPT }}" id="messageText"></textarea>
                             <span id="tokenCount" class="token-count d-none"><span id="tokenCountLabel">Tokens:&nbsp;</span><span id="tokenCountValue">0</span> / {{ conf.CONTEXT_TOKENS }}</span>
                         </div>
                         <div class="float-start" style="padding-top: 5px">

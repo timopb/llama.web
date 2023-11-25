@@ -4,3 +4,4 @@ app/configuration/*
 env.sh
 models/*.bin
 
+.idea
